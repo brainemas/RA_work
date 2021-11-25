@@ -1,100 +1,89 @@
+from dataclasses import dataclass
 from datetime import datetime
+from typing import Iterable
 
 
-GLOBAL_FOLDERS = []
-
-
+@dataclass
 class Folder:
-    def __init__(self, name: str, d: datetime, author: str):
-        self.name = name
-        self.d = d
-        self.author = author
-
-    @staticmethod
-    def get_all_folders():
-        return GLOBAL_FOLDERS
-
-    def add_folder(self):
-        GLOBAL_FOLDERS.append(self)
-
-    @property
-    def folder_name(self):
-        return self.name
-
-    @folder_name.setter
-    def folder_name(self, name: str):
-        self.name = name
+    name: str
+    d: datetime
+    author: str
 
 
+@dataclass
 class File:
-    def __init__(self, name: str, size: int, d: datetime, author: str, parent: Folder):
-        self.__data = {
-            'name': name,
-            'size': size,
-            'd': d,
-            'author': author,
-            'parent': parent,
-        }
-        
-    def __repr__(self):
-        return f'File(name = {self.file_name}, size = {self.__data["size"]}, d = {self.__data["d"]}, author = {self.__data["author"]}, parent = {self.__data["parent"]})'
-
-    @property
-    def file_name(self) -> str:
-        return self.__data['name']
-
-    @file_name.setter
-    def file_name(self, name: str):
-        self.__data['name'] = name
+    name: str
+    size: int
+    d: datetime
+    author: str
+    parent: Folder
 
 
-class FileStorage:
+class Storage:
     def __init__(self):
         self.__files = {}
+        self.__folders = {}
 
-    def get_all(self):
+    def get_all(self) -> Iterable[File]:
         return self.__files.values()
 
-    def put_one(self, name):
-        self.__files[name] = name
+    def put_file(self, file: File):
+        self.__files[file.name] = file
 
-    def delete_one(self, name):
+    def delete_file(self, name: str):
         del self.__files[name]
+
+    def put_folder(self, folder: Folder):
+        self.__folders[folder.name] = folder
+
+    def delete_folder(self, name: str):
+        del self.__folders[name]
 
 
 class FileManager:
     def __init__(self):
-        self.__storage = FileStorage()
+        self.__storage = Storage()
 
     def get_all_files(self):
         return self.__storage.get_all()
 
-    def add_file(self, name):
-        self.__storage.put_one(name)
+    def add_file(self, name: File):
+        self.__storage.put_file(name)
 
-    def remove_file(self, name):
-        self.__storage.delete_one(name)
+    def remove_file(self, name: str):
+        self.__storage.delete_file(name)
+
+    def add_folder(self, name: Folder):
+        self.__storage.put_folder(name)
+
+    def remove_folder(self, name: str):
+        self.__storage.delete_folder(name)
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
+    "создаем папку, переименовываем папку и выводим название папки"
     F = Folder('folder_1', datetime(2021, 11, 22), 'stass')
-    F.folder_name = "renamed_folder"
+    F.name = "renamed_folder"
     print(F.name)
 
-    file = FileManager()
-    f = File('file_1', 10, datetime(2021, 11, 21), 'stass', F.folder_name)
-    print(f.file_name)
-    
-    file.add_file(f)
+    "создаем менеджера файлов, создаем файл и выводим имя файла"
+    FM = FileManager()
+    f = File('file_1', 10, datetime(2021, 11, 21), 'stass', F.name)
+    print(f.name)
 
-    f1 = File('file_2', 10, datetime(2021, 11, 22), 'stass', F.folder_name)
-    f1.file_name = 'renamed_file'
-    print(f1.file_name)
-    
-    file.add_file(f1)
-    
-    print(file.get_all_files())
+    "добавляем созданный файл в менеджер файлов"
+    FM.add_file(f)
 
-    file.remove_file(f)
-    print(file.get_all_files())
+    "создаем второй файл, переименовываем его и выводим имя"
+    f1 = File('file_2', 10, datetime(2021, 11, 22), 'stass', F.name)
+    f1.name = 'renamed_file'
+    print(f1.name)
+    
+    "добавляем второй файл в менеджер файлов и выводим список всех файлов"
+    FM.add_file(f1)
+    print(FM.get_all_files())
+
+    "Удаляем из списка первый файл и выводим список со вторым файлом"
+    FM.remove_file(f.name)
+    print(FM.get_all_files())
