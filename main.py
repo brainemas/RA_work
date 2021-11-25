@@ -42,18 +42,15 @@ class File:
     @file_name.setter
     def file_name(self, name: str):
         self.name = name
-
-    @staticmethod
+        
     def get_all_files():
-        return GLOBAL_FILES
+        return GLOBAL_FILES.values()
 
-    @staticmethod
     def add_file(self):
         GLOBAL_FILES[self.name] = self
         
-    @staticmethod
-    def remove_file(name):
-        del GLOBAL_FILES[name]
+    def remove_file(self):
+        del GLOBAL_FILES[self.name]
 
 
 # Press the green button in the gutter to run the script.
@@ -65,15 +62,15 @@ if __name__ == '__main__':
     f = File('file_1', 10, datetime(2021, 11, 22), 'stass', F.folder_name)
     print(f.file_name)
     
-    f.add_file(f)
+    f.add_file()
 
     f1 = File('file_2', 10, datetime(2021, 11, 22), 'stass', F.folder_name)
     f1.file_name = 'renamed_file'
     print(f1.file_name)
     
-    f1.add_file(f1)
+    f1.add_file()
     
     print(f.get_all_files())
     
-    f.remove_file(f.file_name)
+    f.remove_file()
     print(f.get_all_files())
