@@ -29,11 +29,16 @@ class Folder:
 
 class File:
     def __init__(self, name: str, size: int, d: datetime, author: str, parent: Folder):
-        self.name = name
-        self.size = size
-        self.d = d
-        self.author = author
-        self.parent = parent
+        self.__data = {
+            'name': name,
+            'size': size,
+            'd': d,
+            'author': author,
+            'parent': parent,
+        }
+        
+    def __repr__(self):
+        return f'File(name = {self.file_name}, size = {self.__data["size"]}, d = {self.__data["d"]}, author = {self.__data["author"]}, parent = {self.__data["parent"]})'
 
     @property
     def file_name(self) -> str:
