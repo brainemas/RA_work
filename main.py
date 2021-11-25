@@ -48,20 +48,32 @@ class File:
         self.__data['name'] = name
 
 
+class FileStorage:
+    def __init__(self):
+        self.__files = {}
+
+    def get_all(self):
+        return self.__files.values()
+
+    def put_one(self, name):
+        self.__files[name] = name
+
+    def delete_one(self, name):
+        del self.__files[name]
+
+
 class FileManager:
-    __files = {}
+    def __init__(self):
+        self.__storage = FileStorage()
 
-    @classmethod
-    def get_all_files(cls):
-        return cls.__files.values()
+    def get_all_files(self):
+        return self.__storage.get_all()
 
-    @classmethod
-    def add_file(cls, name):
-        cls.__files[name] = name
+    def add_file(self, name):
+        self.__storage.put_one(name)
 
-    @classmethod
-    def remove_file(cls, name):
-        del cls.__files[name]
+    def remove_file(self, name):
+        self.__storage.delete_one(name)
 
 
 # Press the green button in the gutter to run the script.
