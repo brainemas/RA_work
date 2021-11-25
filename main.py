@@ -27,8 +27,6 @@ class Folder:
 
 
 class File:
-    __files = {}
-
     def __init__(self, name: str, size: int, d: datetime, author: str, parent: Folder):
         self.__data = {
             'name': name,
@@ -49,17 +47,21 @@ class File:
     def file_name(self, name: str):
         self.__data['name'] = name
 
+
+class FileManager:
+    __files = {}
+
     @classmethod
     def get_all_files(cls):
         return cls.__files.values()
 
     @classmethod
     def add_file(cls, name):
-        cls.__files[cls.file_name] = name
+        cls.__files[name] = name
 
     @classmethod
     def remove_file(cls, name):
-        del cls.__files[cls.file_name]
+        del cls.__files[name]
 
 
 # Press the green button in the gutter to run the script.
@@ -68,18 +70,19 @@ if __name__ == '__main__':
     F.folder_name = "renamed_folder"
     print(F.name)
 
+    file = FileManager()
     f = File('file_1', 10, datetime(2021, 11, 21), 'stass', F.folder_name)
     print(f.file_name)
     
-    f.add_file(f)
+    file.add_file(f)
 
     f1 = File('file_2', 10, datetime(2021, 11, 22), 'stass', F.folder_name)
     f1.file_name = 'renamed_file'
     print(f1.file_name)
     
-    f1.add_file(f1)
+    file.add_file(f1)
     
-    print(f.get_all_files())
+    print(file.get_all_files())
 
-    f1.remove_file(f1)
-    print(f1.get_all_files())
+    file.remove_file(f)
+    print(file.get_all_files())
