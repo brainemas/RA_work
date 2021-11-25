@@ -2,7 +2,7 @@ from datetime import datetime
 
 
 GLOBAL_FOLDERS = []
-GLOBAL_FILES = []
+GLOBAL_FILES = {}
 
 
 class Folder:
@@ -47,25 +47,33 @@ class File:
     def get_all_files():
         return GLOBAL_FILES
 
+    @staticmethod
     def add_file(self):
-        GLOBAL_FILES.append(self.name)
+        GLOBAL_FILES[self.name] = self
+        
+    @staticmethod
+    def remove_file(name):
+        del GLOBAL_FILES[name]
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     F = Folder('folder_1', datetime(2021, 11, 22), 'stass')
     F.folder_name = "renamed_folder"
-    print(F.name)
+    print(f.file_name, 'находится в папке', f.parent)
 
     f = File('file_1', 10, datetime(2021, 11, 22), 'stass', F.folder_name)
     print(f.file_name)
     
-    f.add_file()
+    f.add_file(f)
 
-    f1 = f
+    f1 = File('file_2', 10, datetime(2021, 11, 22), 'stass', F.folder_name)
     f1.file_name = 'renamed_file'
     print(f1.file_name)
     
-    f1.add_file()
+    f1.add_file(f1)
     
+    print(f.get_all_files())
+    
+    f.remove_file(f.file_name)
     print(f.get_all_files())
