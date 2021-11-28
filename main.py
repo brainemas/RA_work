@@ -1,63 +1,7 @@
-from dataclasses import dataclass
 from datetime import datetime
-from typing import Iterable
-
-
-@dataclass
-class Folder:
-    name: str
-    d: datetime
-    author: str
-
-
-@dataclass
-class File:
-    name: str
-    size: int
-    d: datetime
-    author: str
-    parent: Folder
-
-
-class Storage:
-    def __init__(self):
-        self.__files = {}
-        self.__folders = {}
-
-    def get_all(self) -> Iterable[File]:
-        return self.__files.values()
-
-    def put_file(self, file: File):
-        self.__files[file.name] = file
-
-    def delete_file(self, name: str):
-        del self.__files[name]
-
-    def put_folder(self, folder: Folder):
-        self.__folders[folder.name] = folder
-
-    def delete_folder(self, name: str):
-        del self.__folders[name]
-
-
-class FileManager:
-    def __init__(self):
-        self.__storage = Storage()
-
-    def get_all_files(self):
-        return self.__storage.get_all()
-
-    def add_file(self, name: File):
-        self.__storage.put_file(name)
-
-    def remove_file(self, name: str):
-        self.__storage.delete_file(name)
-
-    def add_folder(self, name: Folder):
-        self.__storage.put_folder(name)
-
-    def remove_folder(self, name: str):
-        self.__storage.delete_folder(name)
+from File import File
+from Folder import Folder
+from FileManager import FileManager
 
 
 # Press the green button in the gutter to run the script.
