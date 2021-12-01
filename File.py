@@ -7,6 +7,6 @@ import Folder
 class File:
     name: str
     size: int
-    d: datetime
+    d: str
     author: str
-    parent: Folder
+    parent: str
