@@ -35,6 +35,8 @@ class ReadOnlyStorage(object):
 
 class Storage(ReadOnlyStorage):
     def delete_file(self, name: str):
+        if Path(name).stat().st_size > 0:
+            Path(name).write_text('')
         Path(name).unlink()
         print('Файл удален.')
 
