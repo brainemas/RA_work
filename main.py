@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     "Получаем список файлов в указанной папке"
     # folder = input('Введите название папки: ')
-    # print(FM.get_all_files(folder))
+    # FM.get_all_files(folder)
 
     "Получение информации о файле/папке"
     # file = input('Введите имя файла и путь: ')

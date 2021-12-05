@@ -14,7 +14,7 @@ class ReadOnlyStorage(object):
 
     def get_all(self, path: str):
         for child in Path(path).iterdir():
-            return PurePosixPath(child).name
+            print(PurePosixPath(child).name)
 
     def put_file(self, name: str):
         if Path(name).exists():
