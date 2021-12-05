@@ -1,7 +1,7 @@
 from datetime import datetime
 from Folder import Folder
 from File import File
-from pathlib import Path, PurePath
+from pathlib import Path, PurePath, PurePosixPath
 from typing import Iterable
 import time
 import os
@@ -13,8 +13,8 @@ class ReadOnlyStorage(object):
         self._folders = {}
 
     def get_all(self, path: str):
-        return list(map(str, sorted(Path(path).glob('*'))))
-        #sorted(os.listdir(Path.cwd() / path))
+        for child in Path(path).iterdir():
+            return PurePosixPath(child).name
 
     def put_file(self, name: str):
         if Path(name).exists():
