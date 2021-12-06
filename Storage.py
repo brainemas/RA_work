@@ -14,7 +14,7 @@ class ReadOnlyStorage(object):
 
     def get_all(self, path: str):
         for child in Path(path).iterdir():
-            print(PurePosixPath(child).name)
+            return PurePosixPath(child).name
 
     def put_file(self, name: str):
         if Path(name).exists():
@@ -33,7 +33,7 @@ class ReadOnlyStorage(object):
             Folder(name, datetime.today(), Path(name).stat().st_uid)
 
     def open_file(self, name: str):
-        print(Path(name).read_text())
+        return Path(name).read_text()
 
 
 class Storage(ReadOnlyStorage):

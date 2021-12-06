@@ -35,7 +35,9 @@ class GetFilesCommand(AbstractCommand):
     async def execute(self):
         path = str(await self._readline())
         self._writeline('OK')
-        self._writeline(';;'.join([str(file) async for file in self._storage.get_all(path)]))
+        # self._writeline(';;'.join([str(file) async for file in self._storage.get_all(path)]))
+        for file in self._storage.get_all(path):
+            self._writeline(';;'.join([str(file)]))
 
 
 class OpenFileCommand(AbstractCommand):
@@ -44,7 +46,7 @@ class OpenFileCommand(AbstractCommand):
             file_name = str(await self._readline())
 
             if file := self._storage.open_file(file_name):
-                self._writeline('OK')
+                self._writeline(f'Содержимое файла {file_name}:\n')
                 self._writeline(str(file))
             else:
                 self._writeline(f'ERROR: file "{file_name}" not found')
