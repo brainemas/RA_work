@@ -32,6 +32,9 @@ class ReadOnlyStorage(object):
             print('Папка', name, 'добавлена.')
             Folder(name, datetime.today(), Path(name).stat().st_uid)
 
+    def open_file(self, name: str):
+        print(Path(name).read_text())
+
 
 class Storage(ReadOnlyStorage):
     def delete_file(self, name: str):
