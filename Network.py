@@ -1,14 +1,11 @@
 import asyncio
-import json
 import logging
 
 from abc import abstractmethod
 from asyncio.streams import StreamReader, StreamWriter
 
 import Logger
-import FileManager
-from Storage import Storage, ReadOnlyStorage
-
+from Storage import Storage
 
 class AbstractCommand(object):
     """
@@ -42,12 +39,26 @@ class GetFilesCommand(AbstractCommand):
 
 class OpenFileCommand(AbstractCommand):
     async def execute(self):
+        file_name = str(await self._readline())
         try:
-            file_name = str(await self._readline())
-
-            if file := self._storage.open_file(file_name):
+            if self._storage.check_path(file_name):
                 self._writeline(f'Содержимое файла {file_name}:\n')
-                self._writeline(str(file))
+                self._writeline(str(self._storage.open_file(file_name)))
+            else:
+                self._writeline(f'ERROR: file "{file_name}" not found')
+        except ValueError as error:
+            self._writeline(f'ERROR: {error}')
+
+
+class AddToFileCommand(AbstractCommand):
+    async def execute(self):
+        file_name = str(await self._readline())
+        try:
+            if self._storage.check_path(file_name):
+                self._writeline('Введите данные для записи:')
+                data = str(await self._readline())
+                self._storage.add_to_file(file_name, data)
+                self._writeline(f'Данные записаны в файл {file_name}')
             else:
                 self._writeline(f'ERROR: file "{file_name}" not found')
         except ValueError as error:
@@ -106,6 +117,7 @@ class CommandFactory(object):
         'ADD_FOLDER': AddFolderCommand,
         'DELETE_FOLDER': DeleteFolderCommand,
         'OPEN_FILE': OpenFileCommand,
+        'ADD_TO_FILE': AddToFileCommand
     }
 
     def __init__(self, storage: Storage, reader: StreamReader, writer: StreamWriter):
