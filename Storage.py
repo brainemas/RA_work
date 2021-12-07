@@ -2,9 +2,7 @@ from datetime import datetime
 from Folder import Folder
 from File import File
 from pathlib import Path, PurePath, PurePosixPath
-from typing import Iterable
 import time
-import os
 
 
 class ReadOnlyStorage(object):
@@ -34,6 +32,12 @@ class ReadOnlyStorage(object):
 
     def open_file(self, name: str):
         return Path(name).read_text()
+
+    def add_to_file(self, name: str, data: str):
+        Path(name).write_text(data)
+
+    def check_path(self, path):
+        return Path(path).exists()
 
 
 class Storage(ReadOnlyStorage):
