@@ -1,16 +1,18 @@
-import json
 import re
 
 from commands import AbstractCommand
-
+from asyncio.streams import StreamReader, StreamWriter
 from files.File import File
 from files.Storage import Storage
 
 
 class PutFileCommand(AbstractCommand):
-    def __init__(self, storage: Storage):
-        super().__init__(storage)
+    def __init__(self, storage: Storage, reader: StreamReader, writer: StreamWriter):
+        # super().__init__(storage)
         self.__match = None
+        self._reader = reader
+        self._writer = writer
+        self._storage = storage
 
     @property
     def name(self) -> str:
@@ -24,9 +26,11 @@ class PutFileCommand(AbstractCommand):
         self.__match = re.match(rf'^{self.name}$', command)
         return self.__match is not None
 
-    def execute(self):
+    async def execute(self):
         try:
-            name = str(input('Введите имя файла: '))
+            self._writeline('Введите имя файла:')
+            name = str(await self._readline())
             self._storage.put_file(name)
+            self._writeline(f'Файл {name} добавлен.')
         except (TypeError, ValueError) as error:
-            print(f'ERROR: {error}')
+            self._writeline(f'ERROR: {error}')

@@ -1,5 +1,6 @@
 from commands import *
 from files.Storage import Storage
+from asyncio.streams import StreamReader, StreamWriter
 
 
 class CommandFactory(object):
@@ -20,11 +21,14 @@ class CommandFactory(object):
 
         def execute(self):
             for command in self.__factory.commands:
-                print(f'{command.name}: {command.help}')
+                self._writeline(f'{command.name}: {command.help}')
 
     class __UnknownCommand(AbstractCommand):
-        def __init__(self):
+        def __init__(self, storage: Storage, reader: StreamReader, writer: StreamWriter):
             self.__command = None
+            self._reader = reader
+            self._writer = writer
+            self._storage = storage
 
         @property
         def name(self) -> str:
@@ -38,22 +42,25 @@ class CommandFactory(object):
             self.__command = command
             return True
 
-        def execute(self):
-            print(f'Unknown command: "{self.__command}".')
+        async def execute(self):
+            self._writeline(f'Unknown command: "{self.__command}".')
 
-    def __init__(self, storage: Storage):
+    def __init__(self, storage: Storage, reader: StreamReader, writer: StreamWriter):
         self.commands = [
             self.__HelpCommand(self),
-            GetFileCommand(storage),
-            GetFilesCommand(storage),
-            PutFileCommand(storage),
-            PutFolderCommand(storage),
-            DeleteFileCommand(storage),
-            DeleteFolderCommand(storage),
-            AddToFileCommand(storage)
+            GetFileCommand(storage, reader, writer),
+            GetFilesCommand(storage, reader, writer),
+            PutFileCommand(storage, reader, writer),
+            PutFolderCommand(storage, reader, writer),
+            DeleteFileCommand(storage, reader, writer),
+            DeleteFolderCommand(storage, reader, writer),
+            AddToFileCommand(storage, reader, writer)
         ]
+        self._reader = reader
+        self._writer = writer
+        self._storage = storage
 
     def get_command(self, line: str) -> AbstractCommand:
-        for command in self.commands + [self.__UnknownCommand()]:
+        for command in self.commands + [self.__UnknownCommand(self._storage, self._reader, self._writer)]:
             if command.can_execute(line):
                 return command

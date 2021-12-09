@@ -1,13 +1,16 @@
 import re
-
+from asyncio.streams import StreamReader, StreamWriter
 from commands import AbstractCommand
 from files.Storage import Storage
 
 
 class GetFileCommand(AbstractCommand):
-    def __init__(self, storage: Storage):
-        super().__init__(storage)
+    def __init__(self, storage: Storage, reader: StreamReader, writer: StreamWriter):
+        # super().__init__(storage)
         self.__match = None
+        self._reader = reader
+        self._writer = writer
+        self._storage = storage
 
     @property
     def name(self) -> str:
@@ -21,12 +24,13 @@ class GetFileCommand(AbstractCommand):
         self.__match = re.match(rf'^{self.name}$', command)
         return self.__match is not None
 
-    def execute(self):
+    async def execute(self):
         try:
-            name = str(input('Введите имя файла: '))
+            self._writeline('Введите имя файла:')
+            name = str(await self._readline())
             if file := self._storage.open_file(name):
-                print(file)
+                self._writeline(f'Содержимое файла {name}:\n {file}')
             else:
-                print(f'ERROR: file "{name}" not found.')
+                self._writeline(f'ERROR: file "{name}" not found.')
         except ValueError as error:
-            print(f'ERROR: {error}')
+            self._writeline(f'ERROR: {error}')

@@ -7,6 +7,7 @@ from asyncio.streams import StreamReader, StreamWriter
 import Logger
 from Storage import Storage
 
+
 class AbstractCommand(object):
     """
     Базовый класс команды.
