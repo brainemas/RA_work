@@ -23,17 +23,31 @@ class PutFileCommand(AbstractCommand):
         return 'Inserts new file.'
 
     def can_execute(self, command: str) -> bool:
-        self.__match = re.match(rf'^{self.name}$', command)
+        self.__match = re.match(rf'PUT_FILE', command)
         return self.__match is not None
 
-    async def execute(self):
+    async def execute(self, command):
         try:
-            self._writeline('Введите имя файла:')
-            name = str(await self._readline())
-            if self._storage.check_path(name):
-                self._storage.put_file(name)
-                self._writeline(f'Файл {name} добавлен.')
+            # self._writeline('Введите имя файла:')
+            # name = str(await self._readline())
+            name = command.removeprefix('PUT_FILE ')
+            if re.match(rf"^(PUT_FILE)$", command):
+                self._writeline(f'ERROR: no attribute in command.')
+            elif re.match(rf"^(PUT_FILE HELP)$", command):
+                self._writeline('OK')
+                self._writeline(str(self.help))
+            elif self._storage.check_path(str(name)) is False:
+                self._storage.put_file(str(name))
+                self._writeline('OK')
+            elif self._storage.check_path(str(name)) is True:
+                self._writeline(f'ERROR: "{name}" is already exists.')
             else:
-                self._writeline(f'Файл {name} уже существует.')
+                self._writeline(f'Unknown: "{command}".')
+
+            # if self._storage.check_path(name):
+            #     self._storage.put_file(name)
+            #     self._writeline(f'Файл {name} добавлен.')
+            # else:
+            #     self._writeline(f'Файл {name} уже существует.')
         except (TypeError, ValueError) as error:
             self._writeline(f'ERROR: {error}')

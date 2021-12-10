@@ -18,22 +18,37 @@ class AddToFileCommand(AbstractCommand):
 
     @property
     def help(self) -> str:
-        return 'Add data to file.'
+        return 'Add data to file. ADD_TO_FILE {file_name} {data for writing}'
 
     def can_execute(self, command: str) -> bool:
-        self.__match = re.match(rf'^{self.name}$', command)
+        self.__match = re.match(rf'ADD_TO_FILE', command)
         return self.__match is not None
 
-    async def execute(self):
+    async def execute(self, command):
         try:
-            self._writeline('Введите имя файла:')
-            name = str(await self._readline())
-            if self._storage.check_path(name):
-                self._writeline('Введите данные для записи: ')
-                data = str(await self._readline())
-                self._storage.add_to_file(name, data)
+            # self._writeline('Введите имя файла:')
+            # name = str(await self._readline())
+            name = command.removeprefix('ADD_TO_FILE ')
+            data = re.split(r' ', command)
+            if re.match(rf"^(ADD_TO_FILE)$", command):
+                self._writeline(f'ERROR: no attributes in command. Use HELP attribute.')
+            elif re.match(rf"^(ADD_TO_FILE HELP)$", command):
                 self._writeline('OK')
+                self._writeline(str(self.help))
+            elif self._storage.check_path(str(data[1])) is True:
+                self._writeline('OK')
+                self._storage.add_to_file(data[1], data[2])
+            elif self._storage.check_path(str(name)) is False:
+                self._writeline(f'ERROR: File "{data[1]}" not found.')
             else:
-                self._writeline(f'ERROR: file "{name}" not found.')
+                self._writeline(f'Unknown: "{command}".')
+
+            # if self._storage.check_path(name):
+            #     self._writeline('Введите данные для записи: ')
+            #     data = str(await self._readline())
+            #     self._storage.add_to_file(name, data)
+            #     self._writeline('OK')
+            # else:
+            #     self._writeline(f'ERROR: file "{name}" not found.')
         except ValueError as error:
             self._writeline(f'ERROR: {error}')

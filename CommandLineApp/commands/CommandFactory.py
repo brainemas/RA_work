@@ -22,7 +22,7 @@ class CommandFactory(object):
         def can_execute(self, command: str) -> bool:
             return command == self.name
 
-        async def execute(self):
+        async def execute(self, command):
             for command in self.__factory.commands:
                 self._writeline(f'{command.name}: {command.help}')
 
@@ -45,7 +45,7 @@ class CommandFactory(object):
             self.__command = command
             return True
 
-        async def execute(self):
+        async def execute(self, command):
             self._writeline(f'Unknown command: "{self.__command}".')
 
     def __init__(self, storage: Storage, reader: StreamReader, writer: StreamWriter):

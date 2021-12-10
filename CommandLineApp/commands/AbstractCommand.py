@@ -25,7 +25,7 @@ class AbstractCommand(object):
         pass
 
     @abstractmethod
-    async def execute(self):
+    async def execute(self, command: str):
         pass
 
     async def _readline(self):

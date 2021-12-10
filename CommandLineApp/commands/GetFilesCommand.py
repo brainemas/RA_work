@@ -1,6 +1,8 @@
+import re
 from commands import AbstractCommand
 from files.Storage import Storage
 from asyncio.streams import StreamReader, StreamWriter
+from pathlib import Path
 
 
 class GetFilesCommand(AbstractCommand):
@@ -9,6 +11,7 @@ class GetFilesCommand(AbstractCommand):
         self._reader = reader
         self._writer = writer
         self._storage = storage
+        self.__match = None
 
     @property
     def name(self) -> str:
@@ -19,9 +22,23 @@ class GetFilesCommand(AbstractCommand):
         return 'Prints all files in folder.'
 
     def can_execute(self, command: str) -> bool:
-        return self.name == command
+        self.__match = re.match(rf'GET_FILES', command)
+        if self.__match is not None:
+            return self.__match is not None
 
-    async def execute(self):
-        self._writeline('Введите имя папки:')
-        name = str(await self._readline())
-        self._writeline('Содержимое папки:\n' + '\n'.join([str(file) for file in self._storage.get_all(name)]))
+    async def execute(self, command):
+        # self._writeline('Введите имя папки:')
+        # name = str(await self._readline())
+        path = command.removeprefix('GET_FILES ')
+        if re.match(rf"^(GET_FILES)$", command):
+            self._writeline('OK')
+            self._writeline('Result:\n' + '\n'.join([str(file) for file in self._storage.get_all('/')]))
+        elif re.match(rf"^(GET_FILES HELP)$", command):
+            self._writeline('OK')
+            self._writeline(str(self.help))
+        else:
+            if Path(path).is_dir():
+                self._writeline('OK')
+                self._writeline('Result:\n' + '\n'.join([str(file) for file in self._storage.get_all(str(path))]))
+            else:
+                self._writeline(f'Unknown: "{command}".')

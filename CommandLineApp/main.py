@@ -27,7 +27,7 @@ class CommandProcessor(object):
             # построчно читаем команды и выполняем их
             line = (await reader.readline()).decode().strip()
             command = factory.get_command(line)
-            await command.execute()
+            await command.execute(line)
 
         logging.info(f'Disconnected from {host}:{port}')
 
