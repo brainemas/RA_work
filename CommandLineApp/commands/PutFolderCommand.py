@@ -19,7 +19,7 @@ class PutFolderCommand(AbstractCommand):
 
     @property
     def help(self) -> str:
-        return 'Inserts new folder.'
+        return 'Inserts new folder. PUT_FOLDER {path/folder_name}'
 
     def can_execute(self, command: str) -> bool:
         self.__match = re.match(rf'PUT_FOLDER', command)
@@ -35,7 +35,7 @@ class PutFolderCommand(AbstractCommand):
             # name = str(await self._readline())
             name = command.removeprefix('PUT_FOLDER ')
             if re.match(rf"^(PUT_FOLDER)$", command):
-                self._writeline(f'ERROR: no attribute in command.')
+                self._writeline(f'ERROR: no attribute in command. Use HELP attribute.')
             elif re.match(rf"^(PUT_FOLDER HELP)$", command):
                 self._writeline('OK')
                 self._writeline(str(self.help))

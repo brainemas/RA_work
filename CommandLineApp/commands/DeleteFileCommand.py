@@ -18,7 +18,7 @@ class DeleteFileCommand(AbstractCommand):
 
     @property
     def help(self) -> str:
-        return 'Deletes file.'
+        return 'Deletes file. DELETE_FILE {path/file_name}'
 
     def can_execute(self, command: str) -> bool:
         self.__match = re.match(rf'DELETE_FILE', command)
@@ -30,7 +30,7 @@ class DeleteFileCommand(AbstractCommand):
             # name = str(await self._readline())
             name = command.removeprefix('DELETE_FILE ')
             if re.match(rf"^(DELETE_FILE)$", command):
-                self._writeline(f'ERROR: add attribute in command.')
+                self._writeline(f'ERROR: add attribute in command. Use HELP attribute.')
             elif re.match(rf"^(DELETE_FILE HELP)$", command):
                 self._writeline('OK')
                 self._writeline(str(self.help))

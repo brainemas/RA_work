@@ -20,7 +20,7 @@ class PutFileCommand(AbstractCommand):
 
     @property
     def help(self) -> str:
-        return 'Inserts new file.'
+        return 'Inserts new file. PUT_FILE {path/file_name}'
 
     def can_execute(self, command: str) -> bool:
         self.__match = re.match(rf'PUT_FILE', command)
@@ -32,7 +32,7 @@ class PutFileCommand(AbstractCommand):
             # name = str(await self._readline())
             name = command.removeprefix('PUT_FILE ')
             if re.match(rf"^(PUT_FILE)$", command):
-                self._writeline(f'ERROR: no attribute in command.')
+                self._writeline(f'ERROR: no attribute in command. Use HELP attribute.')
             elif re.match(rf"^(PUT_FILE HELP)$", command):
                 self._writeline('OK')
                 self._writeline(str(self.help))

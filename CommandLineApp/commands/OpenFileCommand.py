@@ -18,7 +18,7 @@ class OpenFileCommand(AbstractCommand):
 
     @property
     def help(self) -> str:
-        return 'Prints file.'
+        return 'Prints file. OPEN_FILE {path/file_name}'
 
     def can_execute(self, command: str) -> bool:
         self.__match = re.match(rf'OPEN_FILE', command)
@@ -30,7 +30,7 @@ class OpenFileCommand(AbstractCommand):
             # name = str(await self._readline())
             name = command.removeprefix('OPEN_FILE ')
             if re.match(rf"^(OPEN_FILE)$", command):
-                self._writeline(f'ERROR: no attribute in command.')
+                self._writeline(f'ERROR: no attribute in command. Use HELP attribute.')
             elif re.match(rf"^(OPEN_FILE HELP)$", command):
                 self._writeline('OK')
                 self._writeline(str(self.help))
