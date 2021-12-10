@@ -4,7 +4,7 @@ from commands import AbstractCommand
 from files.Storage import Storage
 
 
-class GetFileCommand(AbstractCommand):
+class OpenFileCommand(AbstractCommand):
     def __init__(self, storage: Storage, reader: StreamReader, writer: StreamWriter):
         # super().__init__(storage)
         self.__match = None

@@ -28,7 +28,10 @@ class DeleteFileCommand(AbstractCommand):
         try:
             self._writeline('Введите имя файла для удаления:')
             name = str(await self._readline())
-            self._storage.delete_file(name)
-            self._writeline(f'Файл {name} удален.')
+            if self._storage.check_path(name):
+                self._storage.delete_file(name)
+                self._writeline(f'Файл {name} удален.')
+            else:
+                self._writeline(f'Файла {name} не существует.')
         except ValueError as error:
             self._writeline(f'ERROR: {error}')

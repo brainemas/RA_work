@@ -3,6 +3,7 @@ from Folder import Folder
 from File import File
 from pathlib import Path, PurePath, PurePosixPath
 import time
+import pathlib
 
 
 class ReadOnlyStorage(object):
@@ -20,7 +21,7 @@ class ReadOnlyStorage(object):
         else:
             Path(name).touch()
             print('Файл', name, 'добавлен.')
-            File(name, Path(name).stat().st_size, time.ctime(Path(name).stat().st_ctime), Path(name).stat().st_uid, PurePath(name).parent)
+            # File(name, Path(name).stat().st_size, time.ctime(Path(name).stat().st_ctime), Path(name).stat().st_uid, PurePath(name).parent)
 
     def put_folder(self, name: str):
         if Path(name).exists():
@@ -28,7 +29,7 @@ class ReadOnlyStorage(object):
         else:
             Path(name).mkdir()
             print('Папка', name, 'добавлена.')
-            Folder(name, datetime.today(), Path(name).stat().st_uid)
+            # Folder(name, datetime.today(), Path(name).stat().st_uid)
 
     def open_file(self, name: str):
         return Path(name).read_text()
@@ -44,9 +45,12 @@ class Storage(ReadOnlyStorage):
     def delete_file(self, name: str):
         if Path(name).stat().st_size > 0:
             Path(name).write_text('')
-        Path(name).unlink()
-        print('Файл удален.')
+            Path(name).unlink()
+            print('Файл удален.')
 
     def delete_folder(self, name: str):
+        for file in self.get_all(name):
+            self.delete_file(pathlib.Path(name) / file)
         Path(name).rmdir()
         print('Папка удалена.')
+

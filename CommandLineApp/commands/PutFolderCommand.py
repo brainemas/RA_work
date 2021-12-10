@@ -23,13 +23,20 @@ class PutFolderCommand(AbstractCommand):
 
     def can_execute(self, command: str) -> bool:
         self.__match = re.match(rf"^{self.name}$", command)
-        return self.__match is not None
+        if self.__match is not None:
+            return self.__match is not None
+        else:
+            if re.match(rf"^{self.name} HELP$", command) is not None:
+                return self._writeline(str(PutFolderCommand.help))
 
     async def execute(self):
         try:
             self._writeline('Введите имя и путь папки:')
             name = str(await self._readline())
-            self._storage.put_folder(name)
-            self._writeline(f'Папка {name} добалена.')
+            if self._storage.check_path(name):
+                self._storage.put_folder(name)
+                self._writeline(f'Папка {name} добалена.')
+            else:
+                self._writeline(f'Папка {name} уже существует.')
         except (TypeError, ValueError) as error:
             self._writeline(f'ERROR: {error}')

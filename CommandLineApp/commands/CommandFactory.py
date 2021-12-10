@@ -5,8 +5,11 @@ from asyncio.streams import StreamReader, StreamWriter
 
 class CommandFactory(object):
     class __HelpCommand(AbstractCommand):
-        def __init__(self, factory):
+        def __init__(self, factory, storage: Storage, reader: StreamReader, writer: StreamWriter):
             self.__factory = factory
+            self._reader = reader
+            self._writer = writer
+            self._storage = storage
 
         @property
         def name(self) -> str:
@@ -19,7 +22,7 @@ class CommandFactory(object):
         def can_execute(self, command: str) -> bool:
             return command == self.name
 
-        def execute(self):
+        async def execute(self):
             for command in self.__factory.commands:
                 self._writeline(f'{command.name}: {command.help}')
 
@@ -47,8 +50,8 @@ class CommandFactory(object):
 
     def __init__(self, storage: Storage, reader: StreamReader, writer: StreamWriter):
         self.commands = [
-            self.__HelpCommand(self),
-            GetFileCommand(storage, reader, writer),
+            self.__HelpCommand(self, storage, reader, writer),
+            OpenFileCommand(storage, reader, writer),
             GetFilesCommand(storage, reader, writer),
             PutFileCommand(storage, reader, writer),
             PutFolderCommand(storage, reader, writer),

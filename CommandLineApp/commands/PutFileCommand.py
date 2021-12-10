@@ -30,7 +30,10 @@ class PutFileCommand(AbstractCommand):
         try:
             self._writeline('Введите имя файла:')
             name = str(await self._readline())
-            self._storage.put_file(name)
-            self._writeline(f'Файл {name} добавлен.')
+            if self._storage.check_path(name):
+                self._storage.put_file(name)
+                self._writeline(f'Файл {name} добавлен.')
+            else:
+                self._writeline(f'Файл {name} уже существует.')
         except (TypeError, ValueError) as error:
             self._writeline(f'ERROR: {error}')

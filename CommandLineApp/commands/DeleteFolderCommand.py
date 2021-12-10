@@ -28,7 +28,10 @@ class DeleteFolderCommand(AbstractCommand):
         try:
             self._writeline('Введите имя папки для удаления:')
             name = str(await self._readline())
-            self._storage.delete_folder(name)
-            self._writeline(f'Папка {name} удалена.')
+            if self._storage.check_path(name):
+                self._storage.delete_folder(name)
+                self._writeline(f'Папка {name} удалена.')
+            else:
+                self._writeline(f'Папки {name} не существует.')
         except ValueError as error:
             self._writeline(f'ERROR: {error}')
