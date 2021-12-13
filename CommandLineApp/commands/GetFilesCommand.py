@@ -31,11 +31,13 @@ class GetFilesCommand(AbstractCommand):
         # self._writeline('Введите имя папки:')
         # name = str(await self._readline())
         path = command.removeprefix('GET_FILES ')
+        with open("config.json", "r") as config:
+            conf = json.load(config)
         if re.match(rf"^(GET_FILES)$", command):
-            self._writeline(';;'.join([str(file) for file in self._storage.get_all(Path().cwd())]))
+            self._writeline(';;'.join([str(file) for file in self._storage.get_all(Path(conf["path"])]))
         elif re.match(rf"^(GET_FILES HELP)$", command):
             self._writeline(str(self.help))
-        elif Path(path).resolve().parent != Path().cwd():
+        elif Path(path).resolve().parent != Path(conf["path"]):
             self._writeline('Access denied.')
         else:
             if Path(path).is_dir():
