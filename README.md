@@ -80,7 +80,8 @@
 - OK -- команда выполнена;
 - ERROR: no attribute in command. Use HELP attribute -- не задан атрибут к команде, посмотрите справку; 
 - ERROR: File "{name}" not found. -- данное имя не существует;
-- Unknown command: {command_name} -- неизвестная команда.
+- Unknown command: {command_name} -- неизвестная команда;
+- Access denied -- доступ к указанной директории запрещен.
 
 ### OPEN_FILE {file_name}
 Показывает содержимое указанного файла.
