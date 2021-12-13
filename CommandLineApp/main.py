@@ -2,6 +2,7 @@ from commands import AbstractCommand, CommandFactory
 from files.Storage import Storage
 from asyncio.streams import StreamReader, StreamWriter
 import asyncio
+import json
 import logging
 import Logger
 
@@ -35,8 +36,10 @@ class CommandProcessor(object):
 async def main():
     processor = CommandProcessor(Storage())
 
-    # запускаем сервер на localhost:3333
-    server = await asyncio.start_server(processor, 'localhost', 3333)
+    # считываем конфигурацию сервера и запускаем его
+    with open("config.json", "r") as config:
+        conf = json.load(config)
+    server = await asyncio.start_server(processor, conf["host"], conf["port"])
     logging.info('Server started')
 
     async with server:
