@@ -35,6 +35,7 @@ class GetFilesCommand(AbstractCommand):
             conf = json.load(config)
         if re.match(rf"^(GET_FILES)$", command):
             self._writeline(';;'.join([str(file) for file in self._storage.get_all(Path(conf["path"])]))
+            self._writeline('OK")
         elif re.match(rf"^(GET_FILES HELP)$", command):
             self._writeline(str(self.help))
         elif Path(path).resolve().parent != Path(conf["path"]):
@@ -42,5 +43,6 @@ class GetFilesCommand(AbstractCommand):
         else:
             if Path(path).is_dir():
                 self._writeline(';;'.join([str(file) for file in self._storage.get_all(str(path))]))
+                self._writeline('OK")
             else:
                 self._writeline(f'Unknown: "{command}".')
