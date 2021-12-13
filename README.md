@@ -16,7 +16,8 @@
 
 Ответы сервера:
 - OK -- команда выполнена;
-- Unknown command: {command_name} -- неизвестная команда.
+- Unknown command: {command_name} -- неизвестная команда;
+- Access denied -- доступ к указанной директории запрещен.
 
 ### PUT_FOLDER {folder_name}
 Добавлет новую папку в указанную директорию. Команда с обязательным атрибутом в виде пути создания папки.
@@ -64,7 +65,6 @@
 - ERROR: no attribute in command. Use HELP attribute -- не задан атрибут к команде, посмотрите справку; 
 - ERROR: "{name}" is already exists -- данное имя уже существует;
 - Unknown command: {command_name} -- неизвестная команда;
-- Access denied -- доступ к выбранной директории запрещен.
 
 ### DELETE_FILE {file_name}
 Удаляет указанный файл.
@@ -80,8 +80,7 @@
 - OK -- команда выполнена;
 - ERROR: no attribute in command. Use HELP attribute -- не задан атрибут к команде, посмотрите справку; 
 - ERROR: File "{name}" not found. -- данное имя не существует;
-- Unknown command: {command_name} -- неизвестная команда;
-- Access denied -- доступ к указанной директории запрещен.
+- Unknown command: {command_name} -- неизвестная команда.
 
 ### OPEN_FILE {file_name}
 Показывает содержимое указанного файла.
