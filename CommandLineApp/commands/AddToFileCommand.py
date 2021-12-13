@@ -33,11 +33,11 @@ class AddToFileCommand(AbstractCommand):
             if re.match(rf"^(ADD_TO_FILE)$", command):
                 self._writeline(f'ERROR: no attributes in command. Use HELP attribute.')
             elif re.match(rf"^(ADD_TO_FILE HELP)$", command):
-                self._writeline('OK')
                 self._writeline(str(self.help))
-            elif self._storage.check_path(str(data[1])) is True:
                 self._writeline('OK')
+            elif self._storage.check_path(str(data[1])) is True:
                 self._storage.add_to_file(data[1], data[2])
+                self._writeline('OK')
             elif self._storage.check_path(str(name)) is False:
                 self._writeline(f'ERROR: File "{data[1]}" not found.')
             else:

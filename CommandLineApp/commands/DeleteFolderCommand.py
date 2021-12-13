@@ -32,8 +32,8 @@ class DeleteFolderCommand(AbstractCommand):
             if re.match(rf"^(DELETE_FOLDER)$", command):
                 self._writeline(f'ERROR: add attribute in command. Use HELP attribute.')
             elif re.match(rf"^(DELETE_FOLDER HELP)$", command):
-                self._writeline('OK')
                 self._writeline(str(self.help))
+                self._writeline('OK')
             elif self._storage.check_path(str(name)) is True:
                 self._storage.delete_folder(str(name))
                 self._writeline('OK')

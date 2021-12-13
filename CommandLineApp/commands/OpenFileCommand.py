@@ -32,11 +32,11 @@ class OpenFileCommand(AbstractCommand):
             if re.match(rf"^(OPEN_FILE)$", command):
                 self._writeline(f'ERROR: no attribute in command. Use HELP attribute.')
             elif re.match(rf"^(OPEN_FILE HELP)$", command):
-                self._writeline('OK')
                 self._writeline(str(self.help))
-            elif self._storage.check_path(str(name)) is True:
                 self._writeline('OK')
-                self._writeline('Result:\n' + self._storage.open_file(str(name)))
+            elif self._storage.check_path(str(name)) is True:
+                self._writeline(self._storage.open_file(str(name)))
+                self._writeline('OK')
             elif self._storage.check_path(str(name)) is False:
                 self._writeline(f'ERROR: File "{name}" not found.')
             else:

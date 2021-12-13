@@ -31,14 +31,14 @@ class GetFilesCommand(AbstractCommand):
         # name = str(await self._readline())
         path = command.removeprefix('GET_FILES ')
         if re.match(rf"^(GET_FILES)$", command):
+            self._writeline(';;'.join([str(file) for file in self._storage.get_all(Path().cwd())]))
             self._writeline('OK')
-            self._writeline('Result:\n' + '\n'.join([str(file) for file in self._storage.get_all('/')]))
         elif re.match(rf"^(GET_FILES HELP)$", command):
             self._writeline('OK')
             self._writeline(str(self.help))
         else:
             if Path(path).is_dir():
+                self._writeline(';;'.join([str(file) for file in self._storage.get_all(str(path))]))
                 self._writeline('OK')
-                self._writeline('Result:\n' + '\n'.join([str(file) for file in self._storage.get_all(str(path))]))
             else:
                 self._writeline(f'Unknown: "{command}".')

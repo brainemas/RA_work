@@ -37,8 +37,8 @@ class PutFolderCommand(AbstractCommand):
             if re.match(rf"^(PUT_FOLDER)$", command):
                 self._writeline(f'ERROR: no attribute in command. Use HELP attribute.')
             elif re.match(rf"^(PUT_FOLDER HELP)$", command):
-                self._writeline('OK')
                 self._writeline(str(self.help))
+                self._writeline('OK')
             elif self._storage.check_path(str(name)) is False:
                 self._storage.put_folder(str(name))
                 self._writeline('OK')
