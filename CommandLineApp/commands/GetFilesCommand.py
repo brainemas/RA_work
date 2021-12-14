@@ -33,14 +33,15 @@ class GetFilesCommand(AbstractCommand):
         path = command.removeprefix('GET_FILES ')
         with open("config.json", "r") as config:
             conf = json.load(config)
+        P = str(Path(conf["path"]) / command)
         if re.match(rf"^(GET_FILES)$", command):
-            self._writeline(';;'.join([str(file) for file in self._storage.get_all(Path(conf["path"]))]))
+            self._writeline(';;'.join([str(file) for file in self._storage.get_all(conf["path"])]))
         elif re.match(rf"^(GET_FILES HELP)$", command):
             self._writeline(str(self.help))
-        elif Path(path).resolve().parent != Path().cwd():
+        elif str(Path(path).resolve().parent) != conf["path"]:
             self._writeline('Access denied.')
         else:
             if Path(path).is_dir():
-                self._writeline(';;'.join([str(file) for file in self._storage.get_all(str(path))]))
+                self._writeline(';;'.join([str(file) for file in self._storage.get_all(P)]))
             else:
                 self._writeline(f'Unknown: "{command}".')

@@ -4,6 +4,7 @@ from files.File import File
 from pathlib import Path, PurePath, PurePosixPath
 import time
 import pathlib
+import json
 
 
 class ReadOnlyStorage(object):
@@ -12,7 +13,10 @@ class ReadOnlyStorage(object):
         self._folders = []
 
     def get_all(self, path: str):
-        for child in Path(path).iterdir():
+        with open("config.json", "r") as config:
+            conf = json.load(config)
+        P = Path(conf["path"]) / Path(path)
+        for child in P.iterdir():
             self._files.append(PurePosixPath(child).name)
         return self._files
 
